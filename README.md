@@ -6,9 +6,7 @@ This work was supported by the National Science Foundation through grants [SES-1
 
 https://nppackages.github.io/replication
 
-## Empirical Application: Head Start Data
-
-- Source: .
+## Empirical Application: Economic Liberalization.
 
 - Dataset: [csv](xxxx.csv) | [dta](xxx.dta)
 
