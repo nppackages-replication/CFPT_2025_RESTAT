@@ -8,7 +8,7 @@ https://nppackages.github.io/replication
 
 ## Empirical Application: Economic Liberalization.
 
-- Source: Billmeier and Nannicini (2013): [Assessing Economic Liberalization Episodes: A Synthetic Control Approach](https://doi.org/10.1162/REST_a_00324), _Review of Economics and Statistics_ 95 (3): 983–1001.
+- Source: Billmeier and Nannicini (2013): [Assessing Economic Liberalization Episodes: A Synthetic Control Approach](https://doi.org/10.1162/REST_a_00324), _Review of Economics and Statistics_ 95 (3): 983-1001.
 
 - Dataset: [csv](xxxx.csv) | [dta](xxx.dta)
 
