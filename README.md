@@ -10,7 +10,7 @@ https://nppackages.github.io/replication
 
 - Source: Billmeier and Nannicini (2013): [Assessing Economic Liberalization Episodes: A Synthetic Control Approach](https://doi.org/10.1162/REST_a_00324), _Review of Economics and Statistics_ 95 (3): 983-1001.
 
-- Dataset: [csv](xxxx.csv) | [dta](xxx.dta)
+- Dataset: [dta](CFPT_2022_wp.dta)
 
 - Python implementation: [main](CFPT_2022_wp.R)
 
