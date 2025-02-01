@@ -1,5 +1,5 @@
 ###############################################################################
-## Replication File for Cattaneo, Feng, Palomba, and Titiunik (2024)
+## Replication File for Cattaneo, Feng, Palomba, and Titiunik (2025)
 ###############################################################################
 rm(list=ls(all=TRUE))
 
@@ -12,11 +12,13 @@ devtools::install_github("apoorvalal/LalRUtils")
 ##########################################
 # Set paths
 path <- "YOUR_PATH"
+
 path.data <- paste0(path, "data/")
 path.fig  <- paste0(path, "fig/")
 path.out  <- paste0(path, "out/")
 path.tab  <- paste0(path, "tables/")
 path.code <- paste0(path, "code/")
+source(paste0(path.code, "0001_funs.R"))
 
 theme_set(theme_bw())
 dpi <- 300
@@ -428,6 +430,9 @@ writexl::write_xlsx(df.store, paste0(path.tab, "piLengthReductionAux.xlsx"))
 ######################################################################################
 
 data <- haven::read_dta(paste0(path.data, "final_data.dta"))
+data <- subset(data, continent == "Africa" & !(countryname %in% arab.league))
+data$lgdp <- log(data$rgdppp)
+
 data$countryname.f <- as.factor(data$countryname)
 
 aux <- LalRUtils::panelMatrices(subset(data, continent == "Africa"), unit_id = "countryname.f",
@@ -460,3 +465,5 @@ ggsave(filename=paste0(path.fig, "africa_matrix_treatment.png"), plot=p, height=
 tikz(file = paste0(path.fig, "africa_matrix_treatment.tex"), width = 7, height = 7)
 plot(p)
 dev.off()
+
+
