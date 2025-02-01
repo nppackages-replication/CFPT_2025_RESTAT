@@ -1,24 +1,6 @@
 ###############################################################################
 ## Replication File for Cattaneo, Feng, Palomba, and Titiunik (2025)
 ###############################################################################
-rm(list=ls(all=TRUE))
-
-##########################################
-# Load stuff 
-pacman::p_load(scpi, haven, wesanderson, ggplot2, reshape2, tikzDevice, 
-               devtools, dplyr, tidyverse, scales, writexl)
-devtools::install_github("apoorvalal/LalRUtils")
-
-##########################################
-# Set paths
-path <- "YOUR_PATH"
-
-path.data <- paste0(path, "data/")
-path.fig  <- paste0(path, "fig/")
-path.out  <- paste0(path, "out/")
-path.tab  <- paste0(path, "tables/")
-path.code <- paste0(path, "code/")
-source(paste0(path.code, "0001_funs.R"))
 
 theme_set(theme_bw())
 dpi <- 300
@@ -326,105 +308,106 @@ write.csv(round(aux, 3), paste0(path.tab, "estValueRegularizationParams.csv"))
 ######################################################################################
 # Table XX: prediction interval comparison
 ######################################################################################
-covs.list <- c(FALSE, TRUE)
-
-# columns are three constraint types X M=1, M=2
-df.store <- data.frame("ridge" = character(12),
-                       "ridge_covs" = character(12),
-                       "simplex" = character(12),
-                       "simplex_covs" = character(12),
-                       "L1L2" = character(12),
-                       "L1L2_covs" = character(12))
-
-for (method in methods.list) {
-  method.str <- method
-  if (method=="L1-L2") method.str <- "L1L2"
+if (isTRUE(joint.optim)) {
+  covs.list <- c(FALSE, TRUE)
   
-  for (covs.use in covs.list) {
-
-    if (isTRUE(covs.use)) {
-      covs.str <- "_covs"
-    } else {
-      covs.str <- ""
+  # columns are three constraint types X M=1, M=2
+  df.store <- data.frame("ridge" = character(12),
+                         "ridge_covs" = character(12),
+                         "simplex" = character(12),
+                         "simplex_covs" = character(12),
+                         "L1L2" = character(12),
+                         "L1L2_covs" = character(12))
+  
+  for (method in methods.list) {
+    method.str <- method
+    if (method=="L1-L2") method.str <- "L1L2"
+    
+    for (covs.use in covs.list) {
+  
+      if (isTRUE(covs.use)) {
+        covs.str <- "_covs"
+      } else {
+        covs.str <- ""
+      }
+  
+      col.df <- paste0(method.str, covs.str)
+      
+      ######################
+      # \tau_{ik} - Wave All
+      ######################
+      
+      load.name <- paste0("Africa_WaveAll_", method, covs.str, ".RData")
+      load(paste0(path.out, load.name))
+      
+      aux <- (1 - res$inference.results$CI.in.sample[, "Length"] / res.old$inference.results$CI.in.sample[, "Length"]) * 100
+      aux <- round(aux, 2)
+      
+      df.store[1, col.df] <- round(median(aux, na.rm=TRUE), 2)
+      df.store[2, col.df] <- paste0("$[",min(aux, na.rm=TRUE),";",max(aux, na.rm=TRUE),"]$")
+  
+      ######################
+      # \tau_{i.} - Wave All
+      ######################
+      
+      aux <- (1 - res.unit$inference.results$CI.in.sample[, "Length"] / res.unit.old$inference.results$CI.in.sample[, "Length"]) * 100
+      aux <- round(aux, 2)
+      
+      df.store[3, col.df] <- round(median(aux, na.rm=TRUE), 2)
+      df.store[4, col.df] <- paste0("$[",min(aux, na.rm=TRUE),";",max(aux, na.rm=TRUE),"]$")
+  
+      ######################
+      # \tau_{.k} - Wave All
+      ######################
+      
+      aux <- (1 - res.time$inference.results$CI.in.sample[, "Length"] / res.time.old$inference.results$CI.in.sample[, "Length"]) * 100
+      aux <- round(aux, 2)
+      
+      df.store[5, col.df] <- round(median(aux, na.rm=TRUE), 2)
+      df.store[6, col.df] <- paste0("$[",min(aux, na.rm=TRUE),";",max(aux, na.rm=TRUE),"]$")
+      
+      ######################
+      # \tau_{.k} - Wave 1
+      ######################
+      load.name <- paste0("Africa_Wave1_", method, covs.str, ".RData")
+      load(paste0(path.out, load.name))
+      
+      aux <- (1 - res.time$inference.results$CI.in.sample[, "Length"] / res.time.old$inference.results$CI.in.sample[, "Length"]) * 100
+      aux <- round(aux, 2)
+      
+      df.store[7, col.df] <- round(median(aux, na.rm=TRUE), 2)
+      df.store[8, col.df] <- paste0("$[",min(aux, na.rm=TRUE),";",max(aux, na.rm=TRUE),"]$")
+  
+      ######################
+      # \tau_{.k} - Wave 2
+      ######################
+      load.name <- paste0("Africa_Wave2_", method, covs.str, ".RData")
+      load(paste0(path.out, load.name))
+      
+      aux <- (1 - res.time$inference.results$CI.in.sample[, "Length"] / res.time.old$inference.results$CI.in.sample[, "Length"]) * 100
+      aux <- round(aux, 2)
+      
+      df.store[9, col.df] <- round(median(aux, na.rm=TRUE), 2)
+      df.store[10, col.df] <- paste0("$[",min(aux, na.rm=TRUE),";",max(aux, na.rm=TRUE),"]$")
+  
+      ######################
+      # \tau_{.k} - Wave 3
+      ######################
+      load.name <- paste0("Africa_Wave1_", method, covs.str, ".RData")
+      load(paste0(path.out, load.name))
+      
+      aux <- (1 - res.time$inference.results$CI.in.sample[, "Length"] / res.time.old$inference.results$CI.in.sample[, "Length"]) * 100
+      aux <- round(aux, 2)
+      
+      df.store[11, col.df] <- round(median(aux, na.rm=TRUE), 2)
+      df.store[12, col.df] <- paste0("$[",min(aux, na.rm=TRUE),";",max(aux, na.rm=TRUE),"]$")
+      
     }
-
-    col.df <- paste0(method.str, covs.str)
-    
-    ######################
-    # \tau_{ik} - Wave All
-    ######################
-    
-    load.name <- paste0("Africa_WaveAll_", method, covs.str, ".RData")
-    load(paste0(path.out, load.name))
-    
-    aux <- (1 - res$inference.results$CI.in.sample[, "Length"] / res.old$inference.results$CI.in.sample[, "Length"]) * 100
-    aux <- round(aux, 2)
-    
-    df.store[1, col.df] <- round(median(aux, na.rm=TRUE), 2)
-    df.store[2, col.df] <- paste0("$[",min(aux, na.rm=TRUE),";",max(aux, na.rm=TRUE),"]$")
-
-    ######################
-    # \tau_{i.} - Wave All
-    ######################
-    
-    aux <- (1 - res.unit$inference.results$CI.in.sample[, "Length"] / res.unit.old$inference.results$CI.in.sample[, "Length"]) * 100
-    aux <- round(aux, 2)
-    
-    df.store[3, col.df] <- round(median(aux, na.rm=TRUE), 2)
-    df.store[4, col.df] <- paste0("$[",min(aux, na.rm=TRUE),";",max(aux, na.rm=TRUE),"]$")
-
-    ######################
-    # \tau_{.k} - Wave All
-    ######################
-    
-    aux <- (1 - res.time$inference.results$CI.in.sample[, "Length"] / res.time.old$inference.results$CI.in.sample[, "Length"]) * 100
-    aux <- round(aux, 2)
-    
-    df.store[5, col.df] <- round(median(aux, na.rm=TRUE), 2)
-    df.store[6, col.df] <- paste0("$[",min(aux, na.rm=TRUE),";",max(aux, na.rm=TRUE),"]$")
-    
-    ######################
-    # \tau_{.k} - Wave 1
-    ######################
-    load.name <- paste0("Africa_Wave1_", method, covs.str, ".RData")
-    load(paste0(path.out, load.name))
-    
-    aux <- (1 - res.time$inference.results$CI.in.sample[, "Length"] / res.time.old$inference.results$CI.in.sample[, "Length"]) * 100
-    aux <- round(aux, 2)
-    
-    df.store[7, col.df] <- round(median(aux, na.rm=TRUE), 2)
-    df.store[8, col.df] <- paste0("$[",min(aux, na.rm=TRUE),";",max(aux, na.rm=TRUE),"]$")
-
-    ######################
-    # \tau_{.k} - Wave 2
-    ######################
-    load.name <- paste0("Africa_Wave2_", method, covs.str, ".RData")
-    load(paste0(path.out, load.name))
-    
-    aux <- (1 - res.time$inference.results$CI.in.sample[, "Length"] / res.time.old$inference.results$CI.in.sample[, "Length"]) * 100
-    aux <- round(aux, 2)
-    
-    df.store[9, col.df] <- round(median(aux, na.rm=TRUE), 2)
-    df.store[10, col.df] <- paste0("$[",min(aux, na.rm=TRUE),";",max(aux, na.rm=TRUE),"]$")
-
-    ######################
-    # \tau_{.k} - Wave 3
-    ######################
-    load.name <- paste0("Africa_Wave1_", method, covs.str, ".RData")
-    load(paste0(path.out, load.name))
-    
-    aux <- (1 - res.time$inference.results$CI.in.sample[, "Length"] / res.time.old$inference.results$CI.in.sample[, "Length"]) * 100
-    aux <- round(aux, 2)
-    
-    df.store[11, col.df] <- round(median(aux, na.rm=TRUE), 2)
-    df.store[12, col.df] <- paste0("$[",min(aux, na.rm=TRUE),";",max(aux, na.rm=TRUE),"]$")
-    
   }
+  
+  writexl::write_xlsx(df.store, paste0(path.tab, "piLengthReductionAux.xlsx"))
+
 }
-
-writexl::write_xlsx(df.store, paste0(path.tab, "piLengthReductionAux.xlsx"))
-
-
 ######################################################################################
 # Figure 1: staggered adoption matrix
 ######################################################################################

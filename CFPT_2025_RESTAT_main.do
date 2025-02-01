@@ -9,7 +9,7 @@
 ** net install scpi, from(https://raw.githubusercontent.com/nppackages/scpi/master/stata) replace
 *****************************************************************************************
 
-global path "/Users/fpalomba/Princeton Dropbox/Filippo Palomba/projects/scpi/CFPT_2022_application/0000_replication"
+global path "YOUR_PATH"
 global data "$path/data"
 global gphs "$path/fig/other"
 

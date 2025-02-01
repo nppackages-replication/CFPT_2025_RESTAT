@@ -1,7 +1,7 @@
 predictandsGet <- function(data, treated.units, w.constr, save.path, save.name, features=NULL, 
                            covs.adj=NULL, anticipation=0, post.est=5L, sims=10L, constant=TRUE, 
                            coig.data=TRUE, cores=1L, verbose=TRUE, eff.it=TRUE, eff.t=TRUE,
-                           eff.i=TRUE, placebo.time=FALSE) {
+                           eff.i=TRUE, joint.optim=FALSE) {
   
   # unit-time predictand
   if (isTRUE(eff.it)) {
@@ -14,7 +14,7 @@ predictandsGet <- function(data, treated.units, w.constr, save.path, save.name, 
     res <- scpi(df, sims = sims, cores = cores, w.constr = w.constr, 
                 u.order = 1, u.lags = 1, e.method = "gaussian", verbose = verbose)
 
-    if (isFALSE(placebo.time)) {
+    if (isTRUE(joint.optim)) {
       res.old <- scpi(df, sims = sims, cores = cores, w.constr = w.constr, 
                       u.order = 1, u.lags = 1, e.method = "gaussian", verbose = verbose,
                       force.joint.PI.optim = TRUE)
@@ -38,7 +38,7 @@ predictandsGet <- function(data, treated.units, w.constr, save.path, save.name, 
     res.unit <- scpi(df.unit, sims = sims, cores = cores, w.constr = w.constr,
                      u.order = 1, u.lags = 1, e.method = "gaussian", verbose = verbose)
 
-    if (isFALSE(placebo.time)) {
+    if (isTRUE(joint.optim)) {
       res.unit.old <- scpi(df.unit, sims = sims, cores = cores, w.constr = w.constr,
                            u.order = 1, u.lags = 1, e.method = "gaussian", verbose = verbose,
                            force.joint.PI.optim = TRUE)
@@ -62,7 +62,7 @@ predictandsGet <- function(data, treated.units, w.constr, save.path, save.name, 
     res.time <- scpi(df.time, sims = sims, cores = cores, w.constr = w.constr,
                      u.order = 1, u.lags = 1, e.method = "gaussian", verbose = verbose)  
 
-    if (isFALSE(placebo.time)) {
+    if (isTRUE(joint.optim)) {
       res.time.old <- scpi(df.time, sims = sims, cores = cores, w.constr = w.constr,
                            u.order = 1, u.lags = 1, e.method = "gaussian", verbose = verbose,
                            force.joint.PI.optim = TRUE)  
@@ -83,7 +83,7 @@ predictandsGet <- function(data, treated.units, w.constr, save.path, save.name, 
 predictandsGetCovs <- function(data, treated.units, w.constr, save.path, save.name, features, 
                                covs.adj, anticipation=0, post.est=5L, sims=10L, constant=TRUE,
                                coig.data=TRUE, cores=1L, verbose=TRUE, eff.it=TRUE, eff.t=TRUE,
-                               eff.i=TRUE) {
+                               eff.i=TRUE, joint.optim=FALSE) {
   
   # unit-time predictand
   if (isTRUE(eff.it)) {
@@ -102,9 +102,13 @@ predictandsGetCovs <- function(data, treated.units, w.constr, save.path, save.na
     res <- scpi(df, V.mat=V, sims = sims, cores = cores, w.constr = w.constr, 
                 u.order = 1, u.lags = 1, e.method = "gaussian", verbose = verbose)
 
-    res.old <- scpi(df, V.mat=V, sims = sims, cores = cores, w.constr = w.constr, 
-                    u.order = 1, u.lags = 1, e.method = "gaussian", verbose = verbose,
-                    force.joint.PI.optim = TRUE)
+    if (isTRUE(joint.optim)) {
+      res.old <- scpi(df, V.mat=V, sims = sims, cores = cores, w.constr = w.constr, 
+                      u.order = 1, u.lags = 1, e.method = "gaussian", verbose = verbose,
+                      force.joint.PI.optim = TRUE)
+    } else {
+      res.old <- NULL
+    }
     
   } else {
     res <- res.old <- NULL
@@ -127,9 +131,13 @@ predictandsGetCovs <- function(data, treated.units, w.constr, save.path, save.na
     res.unit <- scpi(df.unit, V.mat=V, sims = sims, cores = cores, w.constr = w.constr, 
                      u.order = 1, u.lags = 1, e.method = "gaussian", verbose = verbose)
 
-    res.unit.old <- scpi(df.unit, V.mat=V, sims = sims, cores = cores, w.constr = w.constr, 
-                         u.order = 1, u.lags = 1, e.method = "gaussian", verbose = verbose,
-                         force.joint.PI.optim = TRUE)
+    if (isTRUE(joint.optim)) {
+      res.unit.old <- scpi(df.unit, V.mat=V, sims = sims, cores = cores, w.constr = w.constr, 
+                           u.order = 1, u.lags = 1, e.method = "gaussian", verbose = verbose,
+                           force.joint.PI.optim = TRUE)
+    } else {
+      res.unit.old <- NULL
+    }
     
   } else {
     res.unit <- res.unit.old <- NULL
@@ -153,9 +161,13 @@ predictandsGetCovs <- function(data, treated.units, w.constr, save.path, save.na
     res.time <- scpi(df.time, V.mat=V, sims = sims, cores = cores, w.constr = w.constr,
                             u.order = 1, u.lags = 1, e.method = "gaussian", verbose = verbose)  
 
-    res.time.old <- scpi(df.time, V.mat=V, sims = sims, cores = cores, w.constr = w.constr,
-                         u.order = 1, u.lags = 1, e.method = "gaussian", verbose = verbose,
-                         force.joint.PI.optim = TRUE)  
+    if (isTRUE(joint.optim)) {
+      res.time.old <- scpi(df.time, V.mat=V, sims = sims, cores = cores, w.constr = w.constr,
+                           u.order = 1, u.lags = 1, e.method = "gaussian", verbose = verbose,
+                           force.joint.PI.optim = TRUE)  
+    } else {
+      res.time.old <- NULL
+    }
     
   } else {
     res.time <- res.time.old <- NULL
