@@ -18,7 +18,7 @@ devtools::install_github("apoorvalal/LalRUtils")
 theme_set(theme_bw())
 ##########################################
 # Set paths
-path <- "/Users/fpalomba/Princeton Dropbox/Filippo Palomba/projects/scpi/CFPT_2022_application/0001_final/replication/"
+path <- "YOUR_PATH_HERE"
 
 # code is built to run in parallel, specify how many cores
 # you'd like to use here below
