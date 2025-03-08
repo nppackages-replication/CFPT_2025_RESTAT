@@ -1,4 +1,4 @@
-# Cattaneo, Feng, Palomba and Titiunik (2025, working paper)
+# Cattaneo, Feng, Palomba and Titiunik (2025, RESTAT)
 
 This work was supported by the National Science Foundation through grants [SES-1947805](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1947805) and [SES-2019432](https://www.nsf.gov/awardsearch/showAward?AWD_ID=2019432), and by the National Institutes of Health through grant [R01 GM072611-16](https://reporter.nih.gov/project-details/10093056).
 
@@ -14,7 +14,7 @@ https://nppackages.github.io/replication
 ## Reference
 
 - Cattaneo, Feng, Palomba and Titiunik (2025): [Uncertainty Quantification in Synthetic Controls with Staggered Treatment Adoption](https://nppackages.github.io/references/Cattaneo-Feng-Palomba-Titiunik_2025_RESTAT.pdf).<br>
-_Review of Economics and Statistics_, revise and resubmit.<br>
+_Review of Economics and Statistics_, forthcoming.<br>
 [Supplemental](https://nppackages.github.io/references/Cattaneo-Feng-Palomba-Titiunik_2025_RESTAT--Supplement.pdf)<br>
 
 - Cattaneo, Feng, Palomba and Titiunik (2025): [scpi: Uncertainty Quantification for Synthetic Control Methods](https://nppackages.github.io/references/Cattaneo-Feng-Palomba-Titiunik_2025_JSS.pdf).<br>
