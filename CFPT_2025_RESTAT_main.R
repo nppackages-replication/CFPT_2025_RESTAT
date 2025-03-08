@@ -9,13 +9,19 @@ rm(list = ls(all = TRUE))
 
 ##########################################
 # Load stuff
-pacman::p_load(scpi, haven, wesanderson, ggplot2, reshape2, tikzDevice, 
-               devtools, dplyr, tidyverse, scales, writexl)
+require(pacman)
+pacman::p_load(devtools, dplyr, haven, ggplot2, reshape2, scales, scpi,
+               tidyverse, tikzDevice, tsDyn, wesanderson, writexl)
+
+
 devtools::install_github("apoorvalal/LalRUtils")
 theme_set(theme_bw())
 ##########################################
 # Set paths
-path <- "YOUR_PATH"
+path <- "/Users/fpalomba/Princeton Dropbox/Filippo Palomba/projects/scpi/CFPT_2022_application/0001_final/replication/"
+
+# code is built to run in parallel, specify how many cores
+# you'd like to use here below
 cores <- 1
 
 path.data <- paste0(path, "data/")
@@ -23,14 +29,15 @@ path.fig  <- paste0(path, "fig/")
 path.tab  <- paste0(path, "tables/")
 path.out  <- paste0(path, "out/")
 path.code <- paste0(path, "code/")
-source(paste0(path.code, "0001_funs.R"))
+source(paste0(path.code, "CFPT_2025_RESTAT_funs.R"))
 
-joint.optim <- FALSE # turn to T if want to replicate Table S.3
+# turn to T if want to replicate Table S.3 (takes hours)
+joint.optim <- FALSE
 
 ##########################################
 # Set parameters/lists
 
-arab.league <- c("Algeria", "Egypt", "Libya", "Morocco", "Sudan", 
+arab.league <- c("Algeria", "Egypt", "Libya", "Morocco", "Sudan",
                  "Tunisia", "Djibouti", "Mauritania", "Somalia")
 sims <- 200L
 post.est <- 5L
@@ -44,7 +51,7 @@ constant <- TRUE
 # Load data
 ##########################################
 
-data <- haven::read_dta(paste0(path.data, "final_data.dta"))
+data <- haven::read_dta(paste0(path.data, "BNdata.dta"))
 data$lgdp <- log(data$rgdppp)
 
 # remove countries in the arab league
@@ -73,15 +80,15 @@ for (method in methods.list) {
     treated.units <- treated.units.list[[j]]
     wave.name <- names(treated.units.list)[j]
     save.name <- paste0("Africa_", wave.name, "_", method)
-    
+
     if (wave.name=="WaveAll") {
       eff.it <- eff.i <- eff.t <- TRUE
     } else {
       eff.it <- eff.i <- FALSE; eff.t <- TRUE
     }
-    
+
     # save .RData 
-    predictandsGet(data, treated.units, w.constr=list("name" = method), 
+    predictandsGet(data, treated.units, w.constr=list("name" = method),
                    save.path=path.out, save.name=save.name,
                    anticipation=anticipation, post.est=post.est, sims=sims,
                    constant=TRUE, cores=cores, joint.optim=joint.optim,
@@ -93,8 +100,8 @@ for (method in methods.list) {
 ## 1b) two features (log rgdp per capita, investment over gdp)
 
 features <- list(c("lgdp", "inv_ratio"))
-covs.adj <- list("lgdp"= c("constant", "trend"), 
-                 "inv_ratio"= c("constant", "trend"))
+covs.adj <- list("lgdp" = c("constant", "trend"),
+                 "inv_ratio" = c("constant", "trend"))
 
 for (method in methods.list) {
   for (j in seq_len(length(treated.units.list))) {
@@ -102,15 +109,15 @@ for (method in methods.list) {
     treated.units <- treated.units.list[[j]]
     wave.name <- names(treated.units.list)[j]
     save.name <- paste0("Africa_", wave.name, "_", method, "_covs")
- 
+
     if (wave.name=="WaveAll") {
       eff.it <- eff.i <- eff.t <- TRUE
     } else {
       eff.it <- eff.i <- FALSE; eff.t <- TRUE
-    }    
-     
-    # save .RData 
-    predictandsGetCovs(data, treated.units, w.constr=list("name" = method), 
+    }
+
+    # save .RData
+    predictandsGetCovs(data, treated.units, w.constr=list("name" = method),
                        save.path=path.out, save.name=save.name,
                        features=features, covs.adj=covs.adj, 
                        anticipation=anticipation, post.est=post.est, sims=sims,
@@ -143,15 +150,15 @@ for (j in seq_len(length(treated.units.list))) {
   treated.units <- treated.units.list[[j]]
   wave.name <- names(treated.units.list)[j]
   save.name <- paste0("Africa_", wave.name, "_", method, "_placebo")
-  
+
   if (wave.name=="WaveAll") {
     eff.it <- eff.i <- eff.t <- TRUE
   } else {
     eff.it <- eff.i <- FALSE; eff.t <- TRUE
   }
-  
-  # save .RData 
-  predictandsGet(data, treated.units, w.constr=list("name" = method), 
+
+  # save .RData
+  predictandsGet(data, treated.units, w.constr=list("name" = method),
                  save.path=path.out, save.name=save.name,
                  anticipation=anticipation, post.est=post.est, sims=sims,
                  constant=TRUE, cores=cores, 
@@ -160,8 +167,11 @@ for (j in seq_len(length(treated.units.list))) {
 
 ##########################################
 # 2b) Leave-one-out exercise
+# Figures S.17-S.20
+###############################################################################
 
-data <- haven::read_dta(paste0(path.data, "final_data.dta"))
+
+data <- haven::read_dta(paste0(path.data, "BNdata.dta"))
 data$lgdp <- log(data$rgdppp)
 
 # remove countries in the arab league
@@ -190,7 +200,7 @@ treated.units.list <- list("WaveAll" = unique(subset(data, treated == 1 & trDate
                            "Wave3" = unique(subset(data, treated == 1 & trDate > 1991 & trDate <= 1994)$countryname))
 
 ############################################
-## TSUS all treated - leave-one-out donors 
+## TSUS all treated - leave-one-out donors
 
 save.name <- paste0("Africa_WaveAll_indiv_", method, robs.save, ".png")
 save.name.tex <- paste0("Africa_WaveAll_indiv_", method, robs.save, ".tex")
@@ -217,15 +227,15 @@ treated.units <- treated.units.list[["WaveAll"]]
 for (j in seq_len(length(donors))) {
   donor.out <- donors[j]
   donors.loo <- list(donors[-j])
-  
+
   df.unit <- scdataMulti(data, id.var = "countryname", outcome.var = "lgdp", effect = "unit-time",
                          treatment.var = "liberalization", time.var = "year", constant = constant, 
                          cointegrated.data = coig.data, post.est = post.est, 
                          units.est = treated.units, features=features, cov.adj = covs.adj,
                          anticipation = anticipation, donors.est = donors.loo)
-  
+
   res.loo <- scest(df.unit, w.constr = list("name" = method))
-  
+
   toplot.obj <- outcomeGet(Y.pre.fit=res.loo$est.results$Y.pre.fit,
                            Y.post.fit=res.loo$est.results$Y.post.fit,
                            Y.df=res.loo$data$Y.df,
@@ -247,8 +257,8 @@ toplot$Highlight <- factor(ifelse(toplot$Excluded == "None", 1, 0),
 
 aux <- toplot %>%
   filter(Highlight == "LOO") %>%
-  group_by(ID, Time) %>%               
-  summarise(ub = max(Effect), lb = min(Effect))     
+  group_by(ID, Time) %>%
+  summarise(ub = max(Effect), lb = min(Effect))
 
 toplot.sub <- subset(toplot, Excluded == "None")
 toplot.sub <- merge(toplot.sub, aux, by = c("ID", "Time"), all = TRUE)
@@ -279,7 +289,7 @@ dev.off()
 
 
 ############################################
-## TAUS all treated - leave-one-out donors 
+## TAUS all treated - leave-one-out donors
 
 save.name <- paste0("Africa_WaveAll_unit_", method, robs.save, ".png")
 save.name.tex <- paste0("Africa_WaveAll_unit_", method, robs.save, ".tex")
@@ -371,7 +381,7 @@ dev.off()
 
 
 ############################################
-## TSUA all treated - leave-one-out donors 
+## TSUA all treated - leave-one-out donors
 
 save.name <- paste0("Africa_WaveAll_time_", method, robs.save, ".png")
 save.name.tex <- paste0("Africa_WaveAll_time_", method, robs.save, ".tex")
@@ -733,4 +743,4 @@ tikz(file = paste0(path.fig, save.name.tex), width = 12, height = 6)
 plot(p)
 dev.off()
 
-source(paste0(path.code, "0001_graphsCreate.R"))
+source(paste0(path.code, "CFPT_2025_RESTAT_graphsCreate.R"))

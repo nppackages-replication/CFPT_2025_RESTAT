@@ -9,12 +9,12 @@
 ** net install scpi, from(https://raw.githubusercontent.com/nppackages/scpi/master/stata) replace
 *****************************************************************************************
 
-global path "YOUR_PATH"
+global path "YOUR_PATH_HERE"
 global data "$path/data"
 global gphs "$path/fig/other"
 
 * Load dataset
-use "$data/final_data.dta", clear
+use "$data/BNdata.dta", clear
 gen lgdp = log(rgdppp)
 global sims = 200
 global scpi_version_checked = "ue"

@@ -1,12 +1,10 @@
-global path "YOUR_PATH"
-global data "$path/data"
-global raw "$path/raw"
+global path "YOUR_PATH_HERE"
 
 ********************************************************************************
 * Create panel of countries
 ********************************************************************************
 
-use "$raw/PTpanelRESTAT.dta", clear
+use "$path/data/PTpanelRESTAT.dta", clear
 
 replace countryname = "P.N.G." if countryname == "Papua New Guinea"
 replace countryname = "C.A.R." if countryname == "Central African Republic"
@@ -33,7 +31,7 @@ replace rgdp = rgdp/1000
 
 replace countryname = "North Macedonia" if countryname == "Macedonia"
 replace countryname = "Cabo Verde" if countryname == "Cape Verde"
-merge m:1 countryname using "$raw/countryregion.dta"
+merge m:1 countryname using "$path/data/countryregion.dta"
 drop if _merge < 3
 drop _merge
 
@@ -44,12 +42,11 @@ sort countryname year
 
 keep countryname year liberalization rgdppp democracy trDate continent treated school2 inv_ratio inflation
 
-save "$data/final_data.dta", replace
-
 la var trDate "Year the country was liberalized"
 la var continent "Continent"
 la var treated "The country undergoes liberalization"
-
 replace trDate = 9999 if mi(trDate)
 
-save "$data/final_data.dta", replace
+
+save "$path/data/BNdata.dta", replace
+

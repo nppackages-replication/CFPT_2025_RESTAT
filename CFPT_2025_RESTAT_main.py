@@ -29,14 +29,14 @@ from scpi_pkg.scplotMulti import scplotMulti
 filterwarnings("ignore")
 numpy.random.seed(8894)
 
-os.chdir('YOUR_PATH')
+os.chdir('YOUR_PATH_HERE')
 
 sims = 200
 cores = 1
 
 ########################################
 # Load database
-data = pandas.read_stata('data/final_data.dta')
+data = pandas.read_stata('data/BNdata.dta')
 data['lgdp'] = numpy.log(data['rgdppp'])
 data['year'] = pandas.DatetimeIndex(data['year']).year  # from datetime64 to int
 
