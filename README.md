@@ -18,7 +18,7 @@ _Review of Economics and Statistics_, forthcoming.<br>
 [Supplemental](https://nppackages.github.io/references/Cattaneo-Feng-Palomba-Titiunik_2025_RESTAT--Supplement.pdf)<br>
 
 - Cattaneo, Feng, Palomba and Titiunik (2025): [scpi: Uncertainty Quantification for Synthetic Control Methods](https://nppackages.github.io/references/Cattaneo-Feng-Palomba-Titiunik_2025_JSS.pdf).<br>
-_Journal of Statistical Software_, forthcoming.
+_Journal of Statistical Software_ 113(1): 1-38.
 
 - Cattaneo, Feng and Titiunik (2021): [Prediction Intervals for Synthetic Control Methods](https://nppackages.github.io/references/Cattaneo-Feng-Titiunik_2021_JASA.pdf).<br>
 _Journal of the American Statistical Association_ 116(536): 1865-1880.<br>
